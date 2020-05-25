@@ -11,11 +11,25 @@ class User(models.Model):
 
 
 class RCForm(models.Model):
-    Road_name = models.CharField(max_length=1000)
-    RC_reason = models.TextField()
-    RC_Cost = models.PositiveIntegerField()
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="rcform")
+    applcnt_name = models.CharField(max_length=1000, default='NULL')
+    RC_reason = models.TextField(default='NULL')
+    RC_Cost = models.PositiveIntegerField(default=500)
+    applicnt_fname = models.CharField(max_length=1000, default='NULL')
+    applicnt_email = models.CharField(max_length=1000, default='NULL')
+    applicant_mobno = models.IntegerField(default=0)
+    authtokn = models.TextField(default='NULL')
+    applcntaddres = models.TextField(default='NULL')
+    applcntdist = models.CharField(max_length=1000, default='NULL')
+    applcntpin = models.IntegerField(default=0)
+    RD_loc = models.CharField(max_length=1000, default='NULL')
+    RD_ulbn = models.CharField(max_length=1000, default='NULL')
+    RD_wn = models.CharField(max_length=1000, default='NULL')
+    RD_type = models.CharField(max_length=1000, default='NULL')
+    RD_len = models.FloatField(default=0.0)
+    RD_lclty = models.CharField(max_length=1000, default='NULL')
+    RD_ctgry = models.CharField(max_length=1000, default='NULL')
+    # user = models.ForeignKey(
+    #     User, on_delete=models.CASCADE, related_name="rcform")
 
     def __str__(self):
-        return self.Road_name
+        return self.applcnt_name
