@@ -28,6 +28,8 @@ class RCForm(models.Model):
     RD_len = models.FloatField(default=0.0)
     RD_lclty = models.CharField(max_length=1000, default='NULL')
     RD_ctgry = models.CharField(max_length=1000, default='NULL')
+    usr_consmcode = models.CharField(
+        max_length=1000, default="RC/06-02-2020/000002")
     # user = models.ForeignKey(
     #     User, on_delete=models.CASCADE, related_name="rcform")
 
