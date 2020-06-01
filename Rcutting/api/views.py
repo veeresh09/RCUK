@@ -280,6 +280,7 @@ class paymentView(views.APIView):
             'sec-fetch-mode': 'cors',
             'referer': 'https://uttarakhand-dev.egovernments.org/employee/egov-common/pay?consumerCode=UK-TL-2019-12-17-000098&tenantId=uk.haridwar',
             'accept-language': 'en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
+            'accept-encoding': 'utf8',
             'cookie': '_ga=GA1.2.1111212684.1580208445'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
