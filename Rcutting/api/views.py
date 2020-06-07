@@ -25,10 +25,15 @@ class UserlistView(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        username = request.POST.get('user_name', "")
-        user_pswd = request.POST.get('user_password', "")
+        username = request.data.get('username', "")
+        user_pswd = request.data.get('user_pswd', "")
+        # username = request.POST.get('username', "")
+        # user_pswd = request.POST.get('user_pswd', "")
         # user_nm = 'CounterEmployee'
         # usr_pwd = 'eGov@123'
+       # print(request.data['username'])
+        username = 'CounterEmployee',
+        user_pswd = 'eGov@123'
         url = "https://uttarakhand-uat.egovernments.org/user/oauth/token"
         payload = {'username': username,
                    'password': user_pswd,
@@ -52,7 +57,18 @@ class UserlistView(mixins.ListModelMixin,
             'Content-Type': 'application/x-www-form-urlencoded'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
-        return Response(response.json())
+        resp = response.json()
+        print(type(resp))
+        key = 'error'
+        respon = dict()
+        if(key in resp.keys()):
+            respon['message'] = "Unsuccesfull"
+            respon['authtoken'] = 'None'
+        else:
+            respon['message'] = "success"
+            respon['authtoken'] = resp['access_token']
+
+        return Response(respon)
 
 
 class RCformlistview(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
@@ -63,24 +79,24 @@ class RCformlistview(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Ge
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        applcnt_name = request.POST.get('applcnt_name', "")
-        #RC_reason = request.POST.get('RC_reason', "")
-        RC_Cost = request.POST.get('RC_Cost', "")
-        #applicnt_fname = request.POST.get('applicnt_fname', "")
-        applicnt_email = request.POST.get('applicnt_email', "")
-        applicant_mobno = request.POST.get('applicant_mobno', "")
-        authtokn = request.POST.get('authtokn', "")
-        applcntaddres = request.POST.get('applcntaddres', "")
-        applcntdist = request.POST.get('applcntdist', "")
-        applcntpin = request.POST.get('applcntpin', "")
-        usr_consmcode = request.POST.get('usr_consmcode', "")
-        #RD_loc = request.POST.get('RD_loc', "")
-        #RD_ulbn = request.POST.get('RD_ulbn', "")
-        #RD_wn = request.POST.get('RD_wn', "")
-        #RD_type = request.POST.get('RD_type', "")
-        #RD_len = request.POST.get('RD_len', "")
-        #RD_lclty = request.POST.get('RD_lclty', "")
-        #RD_ctgry = request.POST.get('RD_ctgry', "")
+        applcnt_name = request.data.get('applcnt_name', "")
+        # RC_reason = request.data.get('RC_reason', "")
+        RC_Cost = request.data.get('RC_Cost', "")
+        # applicnt_fname = request.data.get('applicnt_fname', "")
+        applicnt_email = request.data.get('applicnt_email', "")
+        applicant_mobno = request.data.get('applicant_mobno', "")
+        authtokn = request.data.get('authtokn', "")
+        applcntaddres = request.data.get('applcntaddres', "")
+        applcntdist = request.data.get('applcntdist', "")
+        applcntpin = request.data.get('applcntpin', "")
+        usr_consmcode = request.data.get('usr_consmcode', "")
+        # RD_loc = request.data.get('RD_loc', "")
+        # RD_ulbn = request.data.get('RD_ulbn', "")
+        # RD_wn = request.data.get('RD_wn', "")
+        # RD_type = request.data.get('RD_type', "")
+        # RD_len = request.data.get('RD_len', "")
+        # RD_lclty = request.data.get('RD_lclty', "")
+        # RD_ctgry = request.data.get('RD_ctgry', "")
         url = "https://uttarakhand-uat.egovernments.org/billing-service/demand/_create"
         payload = {
             "RequestInfo": {
@@ -170,8 +186,8 @@ class RCformlistview(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Ge
                             "taxAmount": RC_Cost
                         }
                     ],
-                    "taxPeriodFrom": 1580927399034,
-                    "taxPeriodTo": 1580927399034,
+                    "taxPeriodFrom": 1580927399039,
+                    "taxPeriodTo": 1580927399039,
                     "additionalDetails": {
                         "comment": "Road Cutting Charges"
                     },
@@ -201,12 +217,21 @@ class RCformlistview(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Ge
             'cookie': '_ga=GA1.2.987832590.1579677766'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
-        return Response(response.json())
+        resp = response.json()
+        print(type(resp))
+        key = 'Demands'
+        respon = dict()
+        if(key not in resp.keys()):
+            respon['message'] = "Unsuccesfull"
+        else:
+            respon['message'] = "succesfull"
+        return Response(respon)
 
 
 class getConsumerCode(views.APIView):
     def post(self, request):
         authtoken = request.data.get('authtoken', "")
+        print(authtoken)
         payload = {
             "RequestInfo": {
                 "apiId": "Mihy",
@@ -245,7 +270,17 @@ class getConsumerCode(views.APIView):
             'cookie': '_ga=GA1.2.987832590.1579677766'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
-        return Response(response.json())
+        resp = response.json()
+        print(type(resp))
+        key = 'idResponses'
+        respon = dict()
+        if(key in resp.keys()):
+            respon['message'] = "succesfull"
+            respon['consumcode'] = resp[key][0]['id']
+        else:
+            respon['message'] = "Unsuccesfull"
+            respon['consumcode'] = "NULL"
+        return Response(respon)
 
 
 class paymentView(views.APIView):
