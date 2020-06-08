@@ -319,4 +319,19 @@ class paymentView(views.APIView):
             'cookie': '_ga=GA1.2.1111212684.1580208445'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
-        return Response(response.json())
+        resp = response.json()
+        print(type(resp))
+        key = 'Errors'
+        respon = dict()
+        if(key in resp.keys()):
+            respon['message'] = "Unsuccesfull"
+            respon['billId'] = 'NULL'
+            respon['billNumber'] = "NULL"
+            respon['totalAmount'] = 'NULL'
+        else:
+            respon['message'] = "succesfull"
+            respon['billId'] = resp['Bill'][0]['id']
+            respon['billNumber'] = resp['Bill'][0]['billNumber']
+            respon['totalAmount'] = resp['Bill'][0]['totalAmount']
+        # print(resp)
+        return Response(respon)

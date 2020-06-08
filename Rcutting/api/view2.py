@@ -61,4 +61,19 @@ class Collectpay(views.APIView):
             'accept-encoding': 'utf8'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
-        return Response(response.json())
+        resp = response.json()
+        print(type(resp))
+        key = 'Errors'
+        # print(resp)
+        respon = dict()
+        if(key in resp.keys()):
+            respon['message'] = resp[key][0]['code']
+            respon['recieptNo'] = 'NULL'
+            respon['transactionNumber'] = "NULL"
+            respon['totalAmountPaid'] = 'NULL'
+        else:
+            respon['message'] = "succesfull"
+            respon['recieptNo'] = resp['Payments'][0]['paymentDetails'][0]['receiptNumber']
+            respon['transactionNumber'] = resp['Payments'][0]['transactionNumber']
+            respon['totalAmountPaid'] = resp['Payments'][0]['paymentDetails'][0]['totalAmountPaid']
+        return Response(respon)
